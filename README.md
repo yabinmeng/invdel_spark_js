@@ -87,9 +87,9 @@ You can also view the uploaded application jar files and delete them via REST AP
   OK
 ```
 
-### Submitting Spark Job to DSE from Spark Jobserver 
+### Submitting Spark Jobs to DSE from Spark Jobserver 
 
-After the application jar file is uploaded, you can execute (submit to DSE cluster) it from Spark Jobserver:
+After the application jar file is uploaded, you can execute it from Spark Jobserver. The execution is actually done by DSE cluster because internally Spark Jobserver will submit the job to DSE cluster.
 
 ```
   $  curl -d "<App_Input_Parameters>" "<DSE_Spark_Jobserver_IP>:8090/jobs?appName=invdel&classPath=com.example.InventoryCleanup"
@@ -125,5 +125,20 @@ he screen output above shows the job ID assigned to the job. You can use it to q
 
 # Develop a Spark Jobserver Ready Spark Application
 
+As the first try of my effort, I uploaded a regular Spark application jar file (to be used in **dse spark-submit** command) to DSE Spark Jobserver and tried to run it. I got the following error message. Apparently, there is some unique requirements about writing a Spark job application that can be executed via Spark Jobserver. 
+```
+{
+  "status": "JOB LOADING FAILED",
+  "result": {
+    "message": "com.example.InventoryCleanup$ cannot be cast to spark.jobserver.api.SparkJobBase",
+    "errorClass": "java.lang.ClassCastException",
+    "stack": "java.lang.ClassCastException: com.example.InventoryCleanup$ cannot be cast to spark.jobserver.api.SparkJobBase\n\tat spark.jobserver.context.ScalaContextFactory$class.loadAndValidateJob(SparkContextFactory.scala:87)\n\tat spark.jobserver.context.DefaultSparkContextFactory.loadAndValidateJob(SparkContextFactory.scala:139)\n\tat spark.jobserver.JobManagerActor.startJobInternal(JobManagerActor.scala:292)\n\tat spark.jobserver.JobManagerActor$$anonfun$wrappedReceive$1.applyOrElse(JobManagerActor.scala:192)\n\tat scala.runtime.AbstractPartialFunction.apply(AbstractPartialFunction.scala:36)\n\tat spark.jobserver.common.akka.ActorStack$$anonfun$receive$1.applyOrElse(ActorStack.scala:33)\n\tat scala.runtime.AbstractPartialFunction.apply(AbstractPartialFunction.scala:36)\n\tat spark.jobserver.common.akka.Slf4jLogging$$anonfun$receive$1$$anonfun$applyOrElse$1.apply$mcV$sp(Slf4jLogging.scala:25)\n\tat spark.jobserver.common.akka.Slf4jLogging$class.spark$jobserver$common$akka$Slf4jLogging$$withAkkaSourceLogging(Slf4jLogging.scala:34)\n\tat spark.jobserver.common.akka.Slf4jLogging$$anonfun$receive$1.applyOrElse(Slf4jLogging.scala:24)\n\tat scala.runtime.AbstractPartialFunction.apply(AbstractPartialFunction.scala:36)\n\tat spark.jobserver.common.akka.ActorMetrics$$anonfun$receive$1.applyOrElse(ActorMetrics.scala:23)\n\tat akka.actor.Actor$class.aroundReceive(Actor.scala:484)\n\tat spark.jobserver.common.akka.InstrumentedActor.aroundReceive(InstrumentedActor.scala:8)\n\tat akka.actor.ActorCell.receiveMessage(ActorCell.scala:526)\n\tat akka.actor.ActorCell.invoke(ActorCell.scala:495)\n\tat akka.dispatch.Mailbox.processMailbox(Mailbox.scala:257)\n\tat akka.dispatch.Mailbox.run(Mailbox.scala:224)\n\tat akka.dispatch.Mailbox.exec(Mailbox.scala:234)\n\tat scala.concurrent.forkjoin.ForkJoinTask.doExec(ForkJoinTask.java:260)\n\tat scala.concurrent.forkjoin.ForkJoinPool$WorkQueue.runTask(ForkJoinPool.java:1339)\n\tat scala.concurrent.forkjoin.ForkJoinPool.runWorker(ForkJoinPool.java:1979)\n\tat scala.concurrent.forkjoin.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:107)\n"
+  }
+}
+```
+
+Compared with a regular Spark application, the changes to be made for a Spark Jobserver ready Spark application are minimal and actually quite standard. I'll highlight these changes in the following sections.
+
+## 
 
 
