@@ -126,16 +126,18 @@ he screen output above shows the job ID assigned to the job. You can use it to q
 # Develop a Spark Jobserver Ready Spark Application
 
 As the first try of my effort, I uploaded a regular Spark application jar file (to be used in **dse spark-submit** command) to DSE Spark Jobserver and tried to run it. I got the following error message. Apparently, there is some unique requirements about writing a Spark job application that can be executed via Spark Jobserver. 
-<div>
+```
 {
   "status": "JOB LOADING FAILED",
   "result": {
     "message": "com.example.InventoryCleanup$ cannot be cast to spark.jobserver.api.SparkJobBase",
     "errorClass": "java.lang.ClassCastException",
-    "stack": "... ...
+    "stack": "java.lang.ClassCastException: com.example.InventoryCleanup$ cannot be cast to 
+               spark.jobserver.api.SparkJobBase\n\tat
+               ... ..."
   }
 }
-</div>
+```
 
 Compared with a regular Spark application, the changes to be made for a Spark Jobserver ready Spark application are minimal and actually quite standard. I'll highlight these changes in the following sections.
 
