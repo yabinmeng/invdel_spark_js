@@ -54,7 +54,7 @@ The default installation directory of the Spark Jobserver depends on the type of
 
 ## Uploading Application Jar Files and Executing Them
 
-In order to use DSE Spark jobserver to manage the Spark job application execution against a DSE cluster, the application jar file needs to be uploaded to Spark jobserver first, through its REST API. In the example below, an application jar file named ***invdel_spark_js-assembly-1.0.jar*** is uploaded to DSE Spark Jobserver under the name **invdel**. The "curl" command is executed from the directory where the jar file is located. 
+In order to use DSE Spark jobserver to manage the Spark job application execution against a DSE cluster, the application jar file needs to be uploaded to Spark jobserver first, through its REST API. In the example below, an application jar file named ***invdel_spark_js-assembly-1.0.jar*** is uploaded to DSE Spark Jobserver under the name of **invdel**. The "curl" command is executed from the directory where the jar file is located. 
 ```
   $ curl -X POST <DSE_Spark_Jobserver_IP>:8090/jars/invdel -H "Content-Type: application/java-archive" --data-binary @invdel_spark_js-assembly-1.0.jar
   {
@@ -85,4 +85,35 @@ You can also view the uploaded application jar files and delete them via REST AP
   OK
 ```
 
+After the application jar file is uploaded, you can execute (submit to DSE cluster) it from Spark Jobserver:
 
+```
+  $  curl -d "<App_Input_Parameters>" "<DSE_Spark_Jobserver_IP>:8090/jobs?appName=invdel&classPath=com.example.InventoryCleanup"
+  {
+    "duration": "Job not done yet",
+    "classPath": "com.example.InventoryCleanup",
+    "startTime": "2019-04-26T16:09:10.635Z",
+    "context": "28c96d17-com.example.InventoryCleanup",
+    "status": "STARTED",
+    "jobId": "1173eee8-c2da-44c6-b20b-987178bab7a9"
+  }
+```
+
+There are a few things that need to point out here:
+* For "-d <App_Input_Parameters>" part, it specifies the input parameters required by the application. It can take other forms to pass in the input parameters, which will talk a little bit more in the next chapter.
+
+* For "appName=invdel" part, the string after "appName=" is the application name that was given when the jar file was uploaded to the Spark Jobserver
+
+* The screen output shows the job ID assigned to this job. You can use it to query the on-going job status:
+```
+  $ curl 34.229.41.46:8090/jobs/1173eee8-c2da-44c6-b20b-987178bab7a9
+  {
+    "duration": "25.139 secs",
+    "classPath": "com.example.InventoryCleanup",
+    "startTime": "2019-04-26T16:09:10.635Z",  
+    "context": "28c96d17-com.example.InventoryCleanup",
+    "result": "3 inventories deleted by condition: store [store_1], division [dallas]",
+    "status": "FINISHED",
+    "jobId": "1173eee8-c2da-44c6-b20b-987178bab7a9"
+  }
+```
