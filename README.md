@@ -1,6 +1,6 @@
 # Overview
 
-Since version 4.8, DataStax Enterprise (DSE) has integrated <a href="https://github.com/spark-jobserver/spark-jobserver" target="_blank">Spark Jobserver</a> into its product suite, as an alternate way to manage submitted Spark jobs in a DSE cluster, via REST APIs. In order to use Spark jobserver to manage a Spark job, there is some unique requirements regarding how to write the Spark job. Unfortunately, there is not much document and/or example to follow on how to do so. This repo is intended to address this issue by providing both a step-by-step guideline document and a working example for submitting a Spark job against a DSE cluster.
+Since version 4.8, DataStax Enterprise (DSE) has integrated [Spark Jobserver](https://github.com/spark-jobserver/spark-jobserver") into its product suite, as an alternate way to manage submitted Spark jobs in a DSE cluster, via REST APIs. In order to use Spark jobserver to manage a Spark job, there is some unique requirements regarding how to write the Spark job. Unfortunately, there is not much document and/or example to follow on how to do so. This repo is intended to address this issue by providing both a step-by-step guideline document and a working example for submitting a Spark job against a DSE cluster.
 
 ## Testing DSE Environment and Scenario Description
 
