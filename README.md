@@ -1,6 +1,6 @@
 # Overview
 
-Since version 4.8, DataStax Enterprise (DSE) has integrated [Spark jobserver](https://github.com/spark-jobserver/spark-jobserver) into its product suite, as an alternate way to manage submitted Spark jobs in a DSE cluster, via REST APIs. In order to use Spark jobserver to manage a Spark job, there is some unique requirements regarding how to write the Spark job. Unfortunately, there is not much document and/or example to follow on how to do so. This repo is intended to address this issue by providing both a step-by-step guideline document and a working example for submitting a Spark job against a DSE cluster.
+Since version 4.8, DataStax Enterprise (DSE) has integrated [Spark jobserver](https://github.com/spark-jobserver/spark-jobserver){target="_blank"} into its product suite, as an alternate way to manage submitted Spark jobs in a DSE cluster, via REST APIs. In order to use Spark jobserver to manage a Spark job, there is some unique requirements regarding how to write the Spark job. Unfortunately, there is not much document and/or example to follow on how to do so. This repo is intended to address this issue by providing both a step-by-step guideline document and a working example for submitting a Spark job against a DSE cluster.
 
 ## Testing DSE Environment and Scenario Description
 
@@ -8,7 +8,7 @@ The testing DSE environment is based on version 6.7.2, with the following charac
 * 3 node, single DC cluster
 * SearchAnalytics workload enabled (Solr + Spark)
 
-The Spark appliction example is based on my previous [spark application example](https://github.com/yabinmeng/invdel_spark) about doing a mass-deletion of inventories based on facility division and store location. The C* table schema can some testing data can be found from [here](https://github.com/yabinmeng/invdel_spark_js/blob/master/src/resources/schema.cql) under "src/resources" directory.
+The Spark appliction example is based on my previous [spark application example](https://github.com/yabinmeng/invdel_spark){target="_blank"} about doing a mass-deletion of inventories based on facility division and store location. The C* table schema can some testing data can be found from [here](https://github.com/yabinmeng/invdel_spark_js/blob/master/src/resources/schema.cql){target="_blank"} under "src/resources" directory.
 
 # DSE Spark Jobserver Overview
 
@@ -139,7 +139,7 @@ As the first try of my effort, I uploaded a regular Spark application jar file (
 }
 ```
 
-Compared with a regular Spark application, the changes to be made for a Spark Jobserver ready Spark application are minimal and actually quite standard. I'll highlight these changes in the following sections. For the complete documentation, please refer to OSS Spark Jobserver documentation [here](https://github.com/spark-jobserver/spark-jobserver#create-a-job-server-project)
+Compared with a regular Spark application, the changes to be made for a Spark Jobserver ready Spark application are minimal and actually quite standard. I'll highlight these changes in the following sections. For the complete documentation, please refer to OSS Spark Jobserver documentation [here](https://github.com/spark-jobserver/spark-jobserver#create-a-job-server-project){target="_blank"}
 
 ## 
 
