@@ -1,3 +1,7 @@
+/**
+ * This code is based on old SparkContext, not new SparkSession
+ */
+
 package com.example
 
 import com.datastax.spark.connector._
