@@ -68,7 +68,7 @@ In order to use DSE Spark jobserver to manage the Spark job application executio
 You can also view the uploaded application jar files and delete them via REST APIs:
 ```
   ## List uploaded binary files
-  $ curl -X GET 34.229.41.46:8090/binaries
+  $ curl -X GET <DSE_Spark_Jobserver_IP>:8090/binaries
   {
       "invdel": {
         "binary-type": "Jar",
@@ -159,15 +159,15 @@ If a SQL or Hive job/context is desired (which is not the case for this repo), p
 
 A Spark application that is intended to be submitted for execution through Spark Jobserver needs to have the following program structure. 
 ```
-  object WhatEverAppName extends SparkJob {
+  object WhatEverAppName extends SparkSessionJob {
     type JobData = <type_for_input_parameters>
     type JobOutput = <type_for_output_results>
 
-    def runJob(sc: SparkContext, runtime: JobEnvironment, data: JobData): JobOutput = {
+    def runJob(sparkSession: SparkSession, runtime: JobEnvironment, data: JobData): JobOutput = {
    
     }
 
-    def validate(sc: SparkContext, runtime: JobEnvironment, config: Config):
+    def validate(sparkSession: SparkSession, runtime: JobEnvironment, config: Config):
       JobData Or Every[ValidationProblem] = {
       
     }
@@ -176,19 +176,11 @@ A Spark application that is intended to be submitted for execution through Spark
 
 With such a structure,
 
-1) The application needs to implement Spark Jobserver's [**SparkJobBase** trait](https://github.com/spark-jobserver/spark-jobserver/blob/1ef0178cdb3095c1da3d867e94c702b6ca74bfeb/job-server-api/src/main/scala/spark/jobserver/api/SparkJobBase.scala#L44). In the program structure above, "**SparkJob**" trait is the same as **SparkJobBase**, via the following API definition. 
-```
-  # Spark Jobserver API definition of "SparkJob"
-  trait SparkJob extends SparkJobBase {
-    type C = SparkContext
-  }
-```
-
-Please note that before version 0.7.0, there is an old SparkJob API which is deprecated in the new versions. Please do NOT use the old SparkJob APIs
+1) The application needs to implement Spark Jobserver's [**SparkSessionJob** trait](https://github.com/spark-jobserver/spark-jobserver/blob/1ef0178cdb3095c1da3d867e94c702b6ca74bfeb/job-server-extras/src/main/scala/spark/jobserver/SparkSessionJob.scala). 
 
 2) There are two main methods need to be implemented:
 
-   * **runJob**: This is where the application's main logic is defined. But unlike a reglar Spark application, you don't need to create the SparkContext in this method. Instead, it is managed by the Spark JobServer and will be provided to the job through this method.
+   * **runJob**: This is where the application's main logic is defined. But unlike a reglar Spark application, you don't need to create the SparkSession in this method. Instead, it is managed by the Spark JobServer and will be provided to the job through this method.
    
    * **validate**: In this method, we're doing an initial validation of the context and any provided configuration, such as for the input parameter validity check. It also generates the final paramaters that are needed by the job execution.
 
@@ -198,6 +190,8 @@ The actual job execution (**runJob()**) takes whatever input from **JobData** re
 
 Application output that will be returned back to the client (the response of the REST API call) needs to put in **JobOutput**. Again, the actual type can be any you want it to be.
 
+
+## Process Raw Application Input Parameters
 
 
 
