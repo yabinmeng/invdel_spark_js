@@ -133,13 +133,13 @@ As the first try of my effort, I uploaded a regular Spark application jar file (
     "message": "com.example.InventoryCleanup$ cannot be cast to spark.jobserver.api.SparkJobBase",
     "errorClass": "java.lang.ClassCastException",
     "stack": "java.lang.ClassCastException: com.example.InventoryCleanup$ cannot be cast to 
-               spark.jobserver.api.SparkJobBase\n\tat
-               ... ..."
+              spark.jobserver.api.SparkJobBase\n\tat
+              ... ..."
   }
 }
 ```
 
-Compared with a regular Spark application, the changes to be made for a Spark Jobserver ready Spark application are minimal and actually quite standard. I'll highlight these changes in the following sections.
+Compared with a regular Spark application, the changes to be made for a Spark Jobserver ready Spark application are minimal and actually quite standard. I'll highlight these changes in the following sections. For the complete documentation, please refer to OSS Spark Jobserver documentation [here](https://github.com/spark-jobserver/spark-jobserver#create-a-job-server-project)
 
 ## 
 
