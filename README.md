@@ -14,7 +14,7 @@ The Spark appliction example is based on my previous [spark application example]
 
 ## Start/Stop DSE Spark Jobserver
 
-DSE Spark Jobserver is simply a packaged version of the OSS Spark Jobserver. There is no functional difference between them. Starting DSE Spark Jobserver is esay, simply executing the following command with the screen output as below:
+DSE Spark Jobserver is simply a packaged version of the OSS Spark Jobserver. There is no functional difference between them. Starting DSE Spark Jobserver is esay, just by executing the following command with the screen output as below:
 ```
   $ dse spark-jobserver start
   JMX_PORT empty, using default 9999
@@ -30,7 +30,7 @@ Meanwhile, once started, the DSE Spark job server web UI is accessible from the 
   http://<DSE_Spark_Jobserver_IP>:8090/
 ```
 
-This port, if needed, is configurable in DSE Spark Jobserver main configuration file (**dse.conf**) under the Spark Jobserver installation directory, as below:
+This port, if needed, can be changed from DSE Spark Jobserver main configuration file (**dse.conf**) under the Spark Jobserver installation directory, as below:
 ```
 # Spark Cluster / Job Server configuration
 spark {
@@ -51,3 +51,38 @@ The default installation directory of the Spark Jobserver depends on the type of
   Package installations: /usr/share/dse/spark/spark-jobserver
   Tarball installations: installation_location/resources/spark/spark-jobserver
 ```
+
+## Uploading Application Jar Files and Executing Them
+
+In order to use DSE Spark jobserver to manage the Spark job application execution against a DSE cluster, the application jar file needs to be uploaded to Spark jobserver first, through its REST API. In the example below, an application jar file named ***invdel_spark_js-assembly-1.0.jar*** is uploaded to DSE Spark Jobserver under the name **invdel**. The "curl" command is executed from the directory where the jar file is located. 
+```
+  $ curl -X POST <DSE_Spark_Jobserver_IP>:8090/jars/invdel -H "Content-Type: application/java-archive" --data-binary @invdel_spark_js-assembly-1.0.jar
+  {
+    "status": "SUCCESS",
+    "result": "Jar uploaded"
+  }
+```
+
+You can also view the uploaded application jar files and delete them via REST APIs:
+```
+  ## List uploaded binary files
+  $ curl -X GET 34.229.41.46:8090/binaries
+  {
+      "invdel": {
+        "binary-type": "Jar",
+        "upload-time": "2019-04-26T15:48:37.528Z"
+      }
+  }
+
+  ## List uploaded jar files (one specific type of binary)
+  $ curl -X GET <DSE_Spark_Jobserver_IP>:8090/jars
+  {
+    "invdel": "2019-04-26T15:48:37.528Z"
+  }
+  
+  ## Delete an uploaded binary
+  $ curl -X DELETE <DSE_Spark_Jobserver_IP>:8090/binaries/invdel
+  OK
+```
+
+
