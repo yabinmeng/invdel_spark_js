@@ -92,7 +92,7 @@ You can also view the uploaded application jar files and delete them via REST AP
 After the application jar file is uploaded, you can execute it from Spark Jobserver. The execution is actually done by DSE cluster because internally Spark Jobserver will submit the job to DSE cluster.
 
 ```
-  $  curl -d "<App_Input_Parameters>" "<DSE_Spark_Jobserver_IP>:8090/jobs?appName=invdel&classPath=com.example.InventoryCleanup"
+  $  curl -d "<App_Input_Parameters>" "<DSE_Spark_Jobserver_IP>:8090/jobs?appName=invdel&classPath=com.example.InventoryCleanup_cntx"
   {
     "duration": "Job not done yet",
     "classPath": "com.example.InventoryCleanup",
@@ -108,8 +108,9 @@ There are a few things that need to point out here:
 
 * For "appName=invdel" part, the string after "appName=" is the application name that was given when the jar file was uploaded to the Spark Jobserver
 
+* For "classPath=com.example.InventoryCleanup_cntx" part, the string after "classPath=" is the full application class name.
 
-he screen output above shows the job ID assigned to the job. You can use it to query the on-going job status. In the example below, the job has successfully completed with customized result/repsonse as returned in the **result** field.
+The screen output above shows the job ID assigned to the job. You can use it to query the on-going job status. In the example below, the job has successfully completed with customized result/repsonse as returned in the **result** field.
 ```
   $ curl 34.229.41.46:8090/jobs/1173eee8-c2da-44c6-b20b-987178bab7a9
   {
@@ -159,6 +160,23 @@ If a SQL or Hive job/context is desired (which is not the case for this repo), p
 
 A Spark application that is intended to be submitted for execution through Spark Jobserver needs to have the following program structure. 
 ```
+  object WhatEverAppName extends SparkJob {
+    type JobData = <type_for_input_parameters>
+    type JobOutput = <type_for_output_results>
+
+    def runJob(sc: SparkContext, runtime: JobEnvironment, data: JobData): JobOutput = {
+   
+    }
+
+    def validate(sc: SparkContext, runtime: JobEnvironment, config: Config):
+      JobData Or Every[ValidationProblem] = {
+      
+    }
+}
+```
+
+For Spark 2.x, if we want a SparkSession context for Spark-SQL and Hive support, the program should follow the following (similar) structure.
+```
   object WhatEverAppName extends SparkSessionJob {
     type JobData = <type_for_input_parameters>
     type JobOutput = <type_for_output_results>
@@ -173,6 +191,8 @@ A Spark application that is intended to be submitted for execution through Spark
     }
 }
 ```
+
+
 
 With such a structure,
 
