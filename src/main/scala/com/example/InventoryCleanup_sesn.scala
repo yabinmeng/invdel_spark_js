@@ -6,17 +6,16 @@ package com.example
 
 import com.datastax.spark.connector._
 import com.datastax.spark.connector.rdd.ReadConf
-import org.apache.spark.SparkContext
-import org.apache.spark.sql.SQLContext
+import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.cassandra._
 import com.typesafe.config.Config
 import org.scalactic._
+import spark.jobserver.SparkSessionJob
 import spark.jobserver.api._
 
 import scala.collection.mutable.ListBuffer
 
-
-object InventoryCleanup_cntx extends SparkJob {
+object InventoryCleanup_sesn extends SparkSessionJob {
   type JobData = List[String]
   type JobOutput = String
 
@@ -32,8 +31,8 @@ object InventoryCleanup_cntx extends SparkJob {
     return parmValue
   }
 
-  def validate(sc: SparkContext, runtime: JobEnvironment, config: Config) :
-  JobData Or Every[ValidationProblem] = {
+  def validate(sparkSession: SparkSession, runtime: JobEnvironment, config: Config) :
+    JobData Or Every[ValidationProblem] = {
 
     val storeName = getConfigString(config, "store_name")
     val divisionName = getConfigString(config,"division_name")
@@ -57,7 +56,7 @@ object InventoryCleanup_cntx extends SparkJob {
     store: String
   )
 
-  def runJob(sc: SparkContext, runtime: JobEnvironment, inputParams: JobData) : JobOutput = {
+  def runJob(sparkSession: SparkSession, runtime: JobEnvironment, inputParams: JobData) : JobOutput = {
 
     val inv_keyspace = "inventory_balance"
     val facility_detail_tbl = "facility_detail_by_facility_id"
@@ -66,13 +65,11 @@ object InventoryCleanup_cntx extends SparkJob {
     val store_name = inputParams(0)
     val division_name = inputParams(1)
 
-    val sqlContext = new SQLContext(sc)
-
-    import sqlContext.implicits._
+    import sparkSession.implicits._
 
     // read facility details info, by the store and division
     //   info that are provided as input parameters
-    var facilityDetailDF = sqlContext
+    var facilityDetailDF = sparkSession
       .read
       .cassandraFormat(facility_detail_tbl, inv_keyspace)
       .options(ReadConf.SplitSizeInMBParam.option(32))
@@ -99,7 +96,7 @@ object InventoryCleanup_cntx extends SparkJob {
 
     // read current_item_balance table with all facilities that match
     //   the selected list from above
-    var inventoryDF = sqlContext
+    var inventoryDF = sparkSession
       .read
       .cassandraFormat(inventory_tbl, inv_keyspace)
       .options(ReadConf.SplitSizeInMBParam.option(32))
