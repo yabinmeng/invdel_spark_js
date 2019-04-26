@@ -141,6 +141,64 @@ As the first try of my effort, I uploaded a regular Spark application jar file (
 
 Compared with a regular Spark application, the changes to be made for a Spark Jobserver ready Spark application are minimal and actually quite standard. I'll highlight these changes in the following sections. For the complete documentation, please refer to OSS Spark Jobserver documentation [here](https://github.com/spark-jobserver/spark-jobserver#create-a-job-server-project)
 
-## 
+
+## SBT Project with Dependency Libraries 
+
+The example in this repo is a SBT project, with the following Spark Jobserver library (version 0.8.0) included:
+```
+  resolvers += "Job Server Bintray" at "https://dl.bintray.com/spark-jobserver/maven"
+  libraryDependencies += "spark.jobserver" %% "job-server-api" % "0.8.0" % "provided"
+```
+
+If a SQL or Hive job/context is desired (which is not the case for this repo), please include the following library as well:
+```
+  libraryDependencies += "spark.jobserver" %% "job-server-extras" % "0.8.0" % "provided"
+```
+
+## Overall Program Structure 
+
+A Spark application that is intended to be submitted for execution through Spark Jobserver needs to have the following program structure. 
+```
+  object WhatEverAppName extends SparkJob {
+    type JobData = <type_for_input_parameters>
+    type JobOutput = <type_for_output_results>
+
+    def runJob(sc: SparkContext, runtime: JobEnvironment, data: JobData): JobOutput = {
+   
+    }
+
+    def validate(sc: SparkContext, runtime: JobEnvironment, config: Config):
+      JobData Or Every[ValidationProblem] = {
+      
+    }
+}
+```
+
+With such a structure,
+
+1) The application needs to implement Spark Jobserver's [**SparkJobBase** trait](https://github.com/spark-jobserver/spark-jobserver/blob/1ef0178cdb3095c1da3d867e94c702b6ca74bfeb/job-server-api/src/main/scala/spark/jobserver/api/SparkJobBase.scala#L44). In the program structure above, "**SparkJob**" trait is the same as **SparkJobBase**, via the following API definition. 
+```
+  # Spark Jobserver API definition of "SparkJob"
+  trait SparkJob extends SparkJobBase {
+    type C = SparkContext
+  }
+```
+
+Please note that before version 0.7.0, there is an old SparkJob API which is deprecated in the new versions. Please do NOT use the old SparkJob APIs
+
+2) There are two main methods need to be implemented:
+
+   * **runJob**: This is where the application's main logic is defined. But unlike a reglar Spark application, you don't need to create the SparkContext in this method. Instead, it is managed by the Spark JobServer and will be provided to the job through this method.
+   
+   * **validate**: In this method, we're doing an initial validation of the context and any provided configuration, such as for the input parameter validity check. It also generates the final paramaters that are needed by the job execution.
+
+3) Validated Application Input Paramters and Return Results
+
+The actual job execution (**runJob()**) takes whatever input from **JobData** result that is returnded from the validation method (**validate()**). JobData can be defined to any type that you want it to be.  Please note that the contents in **JobData** may not be the same as the raw input parameters that you might've provided through the APIs. It is all up to the actual validation and processing logic of method **validate()**. Simply speakig, you can think of **JobData** as the validated (and possibly transformed) application input parameters.
+
+Application output that will be returned back to the client (the response of the REST API call) needs to put in **JobOutput**. Again, the actual type can be any you want it to be.
+
+
+
 
 
