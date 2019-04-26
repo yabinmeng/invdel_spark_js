@@ -1,5 +1,5 @@
 /**
- * This code is based on old SparkContext, not new SparkSession
+ * This code is based on old SparkContext API
  */
 
 package com.example
