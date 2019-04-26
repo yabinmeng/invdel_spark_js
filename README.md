@@ -222,7 +222,7 @@ The raw input parameter is taken in and processed by the validation method (**va
 
 In its simpliest form, the raw input parameters can be provided through 'curl' command "**-d or --data**" option (assuming the REST API is called through 'curl' command). Multiple parameters are separated by comma.
 ```
-curl -d "store_name = store_1, division_name = dallas" "34.229.41.46:8090/jobs?appName=invdel&classPath=com.example.InventoryCleanup_cntx"
+curl -d "store_name = store_1, division_name = dallas" "<REST_API_Endpoint>
 ```
 
 
