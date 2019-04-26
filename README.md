@@ -54,6 +54,8 @@ The default installation directory of the Spark Jobserver depends on the type of
 
 ## Uploading Application Jar Files and Executing Them
 
+### Upload Appliation Jar Files to DSE Spark Jobserver
+
 In order to use DSE Spark jobserver to manage the Spark job application execution against a DSE cluster, the application jar file needs to be uploaded to Spark jobserver first, through its REST API. In the example below, an application jar file named ***invdel_spark_js-assembly-1.0.jar*** is uploaded to DSE Spark Jobserver under the name of **invdel**. The "curl" command is executed from the directory where the jar file is located. 
 ```
   $ curl -X POST <DSE_Spark_Jobserver_IP>:8090/jars/invdel -H "Content-Type: application/java-archive" --data-binary @invdel_spark_js-assembly-1.0.jar
@@ -85,6 +87,8 @@ You can also view the uploaded application jar files and delete them via REST AP
   OK
 ```
 
+### Submitting Spark Job to DSE from Spark Jobserver 
+
 After the application jar file is uploaded, you can execute (submit to DSE cluster) it from Spark Jobserver:
 
 ```
@@ -104,7 +108,8 @@ There are a few things that need to point out here:
 
 * For "appName=invdel" part, the string after "appName=" is the application name that was given when the jar file was uploaded to the Spark Jobserver
 
-* The screen output shows the job ID assigned to this job. You can use it to query the on-going job status:
+
+he screen output above shows the job ID assigned to the job. You can use it to query the on-going job status. In the example below, the job has successfully completed with customized result/repsonse as returned in the **result** field.
 ```
   $ curl 34.229.41.46:8090/jobs/1173eee8-c2da-44c6-b20b-987178bab7a9
   {
@@ -117,3 +122,8 @@ There are a few things that need to point out here:
     "jobId": "1173eee8-c2da-44c6-b20b-987178bab7a9"
   }
 ```
+
+# Develop a Spark Jobserver Ready Spark Application
+
+
+
