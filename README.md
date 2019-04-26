@@ -176,7 +176,7 @@ A Spark application that is intended to be submitted for execution through Spark
 
 With such a structure,
 
-1) The application needs to implement Spark Jobserver's [**SparkSessionJob** trait](https://github.com/spark-jobserver/spark-jobserver/blob/1ef0178cdb3095c1da3d867e94c702b6ca74bfeb/job-server-extras/src/main/scala/spark/jobserver/SparkSessionJob.scala), which extends [SparkJobBase](https://github.com/spark-jobserver/spark-jobserver/blob/1ef0178cdb3095c1da3d867e94c702b6ca74bfeb/job-server-api/src/main/scala/spark/jobserver/api/SparkJobBase.scala) trait.
+1) The application needs to implement Spark Jobserver's [**SparkSessionJob**](https://github.com/spark-jobserver/spark-jobserver/blob/1ef0178cdb3095c1da3d867e94c702b6ca74bfeb/job-server-extras/src/main/scala/spark/jobserver/SparkSessionJob.scala) trait, which extends [SparkJobBase](https://github.com/spark-jobserver/spark-jobserver/blob/1ef0178cdb3095c1da3d867e94c702b6ca74bfeb/job-server-api/src/main/scala/spark/jobserver/api/SparkJobBase.scala) trait.
 
 2) There are two main methods need to be implemented:
 
