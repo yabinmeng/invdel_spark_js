@@ -252,7 +252,7 @@ The ad-hoc transient context provided (as default) by Spark jobserve, however, m
 
 ## Pre-created, Permanent Context
 
-In this case, we need to create in advance a non-default, customized context of the specified type. Because this type of context is pre-created, it is faster than the ad-hoc, transient context.
+In this case, we need to create in advance a non-default, customized context of the specified type. Because this type of context is pre-created, it is faster than the ad-hoc, transient context. For more detailed description of custom contexts, please refer to the document [Spark Jobserver: contexts.md](https://github.com/spark-jobserver/spark-jobserver/blob/452d4b66e82466765d82498d61394f441a717c12/doc/contexts.md)
 
 For the demo program  (***InventoryCleanup_sesn.scala***), we need to create a context from **spark.jobserver.context.SessionContextFactory** context factory type. 
 
