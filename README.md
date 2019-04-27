@@ -192,8 +192,6 @@ For Spark 2.x, if we want a SparkSession context for Spark-SQL and Hive support,
 }
 ```
 
-
-
 With such a structure,
 
 1) The application needs to implement Spark Jobserver's [**SparkJob**](https://github.com/spark-jobserver/spark-jobserver/blob/1ef0178cdb3095c1da3d867e94c702b6ca74bfeb/job-server-api/src/main/scala/spark/jobserver/SparkJob.scala) trait or [**SparkSessionJob**](https://github.com/spark-jobserver/spark-jobserver/blob/1ef0178cdb3095c1da3d867e94c702b6ca74bfeb/job-server-extras/src/main/scala/spark/jobserver/SparkSessionJob.scala) trait, which both extends [SparkJobBase](https://github.com/spark-jobserver/spark-jobserver/blob/1ef0178cdb3095c1da3d867e94c702b6ca74bfeb/job-server-api/src/main/scala/spark/jobserver/api/SparkJobBase.scala) trait.
@@ -222,8 +220,26 @@ The raw input parameter is taken in and processed by the validation method (**va
 
 In its simpliest form, the raw input parameters can be provided through 'curl' command "**-d or --data**" option (assuming the REST API is called through 'curl' command). Multiple parameters are separated by comma.
 ```
-curl -d "store_name = store_1, division_name = dallas" "<REST_API_Endpoint>
+  $ curl -d "store_name = store_1, division_name = dallas" "<REST_API_Endpoint>
 ```
 
+The input parameters can also be put in a JSON file and when using 'curl' command, use "**--data-binary**' option to specify the JSON file name.
+```
+  $ curl --data-binary @MyInput.json "<DSE_Spark_Jobserver_IP>:8090/jobs?appName=invdel&classPath=com.example.InventoryCleanup_cntx"
+  
+  $ cat MyInput.json
+  {
+    store_name: "store_1",
+    division_name: "dallas"
+  }
+```
 
+# Manage Jobserver Context
+
+
+
+
+# TODO
+2) DSE User authentication
+3) HTTPS / DSE SSL
 
