@@ -256,7 +256,7 @@ In this case, we need to create in advance a non-default, customized context of 
 
 For the demo program  (***InventoryCleanup_sesn.scala***), we need to create a context from **spark.jobserver.context.SessionContextFactory** context factory type. 
 
-The command below creates a "SparkSession" type context in Spark Sqlserver and name it as **MySessionContext**, with 2 CPU cores (***num-cpu-cores=2***) and 512 MB executor memory per node (memory-per-node=512M).
+The command below creates a "SparkSession" type context in Spark Sqlserver and name it as **MySessionContext**, with 2 CPU cores (***num-cpu-cores=2***) and 512 MB executor memory per node (***memory-per-node=512M***).
 
 ```
   $ curl -d "" "http://<DSE_Spark_Jobserver_IP>:8090/contexts/MySessionContext?num-cpu-cores=2&memory-per-node=512M&context- factory=spark.jobserver.context.SessionContextFactory"
