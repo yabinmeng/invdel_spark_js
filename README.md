@@ -158,7 +158,7 @@ If a SQL or Hive job/context is desired (which is not the case for this repo), p
 
 ## Overall Program Structure 
 
-A Spark application that is intended to be submitted for execution through Spark Jobserver needs to have the following program structure. 
+A Spark application that is intended to be submitted for execution through Spark Jobserver needs to have the following program structure. In this repo, program [InventoryCleanup_cntx.scala](https://github.com/yabinmeng/invdel_spark_js/blob/master/src/main/scala/com/example/InventoryCleanup_cntx.scala) follows this structure.
 ```
   object WhatEverAppName extends SparkJob {
     type JobData = <type_for_input_parameters>
@@ -175,7 +175,7 @@ A Spark application that is intended to be submitted for execution through Spark
 }
 ```
 
-For Spark 2.x, if we want a SparkSession context for Spark-SQL and Hive support, the program should follow the following (similar) structure.
+For Spark 2.x, if we want a SparkSession context for Spark-SQL and Hive support, the program should follow the following (similar) structure. In this repo, program [InventoryCleanup_sesn.scala](https://github.com/yabinmeng/invdel_spark_js/blob/master/src/main/scala/com/example/InventoryCleanup_sesn.scala) follows this structure.
 ```
   object WhatEverAppName extends SparkSessionJob {
     type JobData = <type_for_input_parameters>
@@ -236,10 +236,88 @@ The input parameters can also be put in a JSON file and when using 'curl' comman
 
 # Manage Jobserver Context
 
+## Ad-hoc, Transient Context
+
+So far, the application program (***InventoryCleanup_cntx.scala***) has been executed through Spark Jobserver in an ad-hoc, transient mode. This means that Spark Jobserver will create a temporary, transient execution context (in this case, SparkContext) to submit the application to DSE cluster for execution.
+
+The ad-hoc transient context provided (as default) by Spark jobserve, however, may not statisfy certain requirements. For example, if we want to run Spark SQL code and requires other types contexts, or just SparkSession (for Spark 2.0+), as per another demo program (***InventoryCleanup_sesn.scala***) in this repo, we'll run into the following error:
+
+```
+  $ curl -d "store_name = store_2" "<DSE_Spark_Jobserver_IP>:8090/jobs/?appName=invdel2&classPath=com.example.InventoryCleanup_sesn"
+  {
+    "status": "ERROR",
+    "result": "Invalid job type for this context"
+  }
+```
+
+## Pre-created, Permanent Context
+
+In this case, we need to create in advance a non-default, customized context of the specified type. Because this type of context is pre-created, it is faster than the ad-hoc, transient context.
+
+For the demo program  (***InventoryCleanup_sesn.scala***), we need to create a context from **spark.jobserver.context.SessionContextFactory** context factory type. 
+
+The command below creates a "SparkSession" type context in Spark Sqlserver and name it as **MySessionContext**, with 2 CPU cores (***num-cpu-cores=2***) and 512 MB executor memory per node (memory-per-node=512M).
+
+```
+  $ curl -d "" "http://<DSE_Spark_Jobserver_IP>:8090/contexts/MySessionContext?num-cpu-cores=2&memory-per-node=512M&context- factory=spark.jobserver.context.SessionContextFactory"
+  HTTP/1.1 200 OK
+  Server: spray-can/1.3.4
+  Date: Fri, 26 Apr 2019 20:29:35 GMT
+  Access-Control-Allow-Origin: *
+  Content-Type: application/json; charset=UTF-8
+  Content-Length: 60
+
+  {
+    "status": "SUCCESS",
+    "result": "Context initialized"
+  }
+```
+
+We can view and delete pre-created contexts through the following commands respectively:
+
+```
+  $ curl -X GET <DSE_Spark_Jobserver_IP>:8090/contexts
+  ["MySessionContext"]
+
+  $ curl -X DELETE <DSE_Spark_Jobserver_IP>:8090/contexts/MySessionContext
+  {
+    "status": "SUCCESS",
+   "result": "Context stopped"
+  }
+```
+
+Once the required type of context is available, we can execute the application with the following command. Please note that last part of the command **&conext=MySessionContext** is where the pre-created permanent context is specified for the job execution.
+
+```
+  $ curl -d "store_name = store_2" "<DSE_Spark_Jobserver_IP>:8090/jobs/?appName=invdel2&classPath=com.example.InventoryCleanup_sesn&conext=MySessionContext"
+  {
+    "duration": "Job not done yet",
+   "classPath": "com.example.InventoryCleanup_sesn",
+   "startTime": "2019-04-27T03:18:11.829Z",
+   "context": "MySqlContext",
+   "status": "STARTED",
+   "jobId": "4e183b91-75a3-45c3-a923-ad63daf1de72"
+  }
+```
+
+### Intialize a Pre-created, Permanent Context Automatically
+
+Instead of manually creating a permanent context every time, we can automate its creation by adding the following configuration in DSE Spark Jobserver main configuration file (e.g. /usr/share/dse/spark/spark-jobserver/dse.conf)
+
+```
+  #predefined Spark contexts
+  contexts {
+    MySessionContext {
+      num-cpu-cores = 2             # Number of cores to allocate.  Required.
+      memory-per-node = 512m         # Executor memory per node, -Xmx style eg 512m, 1G, etc.
+    }
+    
+    # define additional contexts here
+  }
+```
 
 
-
-# TODO
+# TODO - Future Work
 2) DSE User authentication
 3) HTTPS / DSE SSL
 
