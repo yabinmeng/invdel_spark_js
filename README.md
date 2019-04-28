@@ -104,7 +104,7 @@ After the application jar file is uploaded, you can execute it from Spark Jobser
 ```
 
 There are a few things that need to point out here:
-* For "-d <App_Input_Parameters>" part, it specifies the input parameters required by the application. It can take other forms to pass in the input parameters, which will talk a little bit more in the next chapter.
+* For "-d <App_Input_Parameters>" part, it specifies the input parameters required by the application. It can take other forms to pass in the input parameters, which I will talk a little bit more in the next chapter.
 
 * For "appName=invdel" part, the string after "appName=" is the application name that was given when the jar file was uploaded to the Spark Jobserver
 
