@@ -198,7 +198,7 @@ With such a structure,
 
 2) There are two main methods need to be implemented:
 
-   * **runJob**: This is where the application's main logic is defined. But unlike a reglar Spark application, you don't need to create the SparkSession in this method. Instead, it is managed by the Spark JobServer and will be provided to the job through this method.
+   * **runJob**: This is where the application's main logic is defined. But unlike a reglar Spark application, you don't need to create the SparkContext/SparkSession in this method. Instead, it is managed by the Spark JobServer and will be provided to the job through this method.
    
    * **validate**: In this method, we're doing an initial validation of the context and any provided configuration, such as for the input parameter validity check. It also generates the final paramaters that are needed by the job execution.
 
