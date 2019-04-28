@@ -254,7 +254,7 @@ The ad-hoc transient context provided (as default) by Spark jobserve, however, m
 
 In this case, we need to create in advance a non-default, customized context of the specified type. Because this type of context is pre-created, it is faster than the ad-hoc, transient context. For more detailed description of custom contexts, please refer to the document [OSS Spark Jobserver: contexts.md](https://github.com/spark-jobserver/spark-jobserver/blob/452d4b66e82466765d82498d61394f441a717c12/doc/contexts.md)
 
-For the demo program  (***InventoryCleanup_sesn.scala***), we need to create a context from **spark.jobserver.context.SessionContextFactory** context factory type. 
+For the demo program  (***InventoryCleanup_sesn.scala***), we need to create a context of **spark.jobserver.context.SessionContextFactory** context factory type. 
 
 The command below creates a "SparkSession" type context in Spark Sqlserver and name it as **MySessionContext**, with 2 CPU cores (***num-cpu-cores=2***) and 512 MB executor memory per node (***memory-per-node=512M***).
 
