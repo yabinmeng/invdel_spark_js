@@ -240,7 +240,7 @@ The input parameters can also be put in a JSON file and when using 'curl' comman
 
 So far, the application program (***InventoryCleanup_cntx.scala***) has been executed through Spark Jobserver in an ad-hoc, transient mode. This means that Spark Jobserver will create a temporary, transient execution context (in this case, SparkContext) to submit the application to DSE cluster for execution.
 
-The ad-hoc transient context provided (as default) by Spark jobserve, however, may not statisfy certain requirements. For example, if we want to run Spark SQL code and requires other types contexts, or just SparkSession (for Spark 2.0+), as per another demo program (***InventoryCleanup_sesn.scala***) in this repo, we'll run into the following error:
+The ad-hoc transient context provided (as default) by Spark jobserve, however, may not statisfy certain requirements. For example, if we want to run Spark SQL code that requires other types contexts, or just SparkSession (for Spark 2.0+), as per another demo program (***InventoryCleanup_sesn.scala***) in this repo, we'll run into the following error:
 
 ```
   $ curl -d "store_name = store_2" "<DSE_Spark_Jobserver_IP>:8090/jobs/?appName=invdel2&classPath=com.example.InventoryCleanup_sesn"
