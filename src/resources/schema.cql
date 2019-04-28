@@ -5,28 +5,16 @@ CREATE TABLE IF NOT EXISTS inventory_balance.current_item_balance_by_base_upc (
     base_upc text,
     location text,
     current_balance double,
-    current_date timestamp,
-    inserted_date timestamp,
-    inserted_user_id text,
-    uom text,
-    updated_date timestamp,
-    updated_user_id text,
     PRIMARY KEY ((facility_id, base_upc), location)
 );
 
 CREATE TABLE IF NOT EXISTS inventory_balance.facility_detail_by_facility_id (
     facility_id uuid PRIMARY KEY,
     division text,
-    facility_short_name text,
-    facility_type_long_desc text,
-    facility_type_name text,
-    facility_type_short_desc text,
-    inserted_date timestamp,
-    inserted_user_id text,
+    facility_name text,
     notes text,
     store text,
-    updated_date timestamp,
-    updated_user_id text
+    updated_date timestamp
 );
 
 use inventory_balance;
