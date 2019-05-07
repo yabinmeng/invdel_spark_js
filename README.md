@@ -12,7 +12,7 @@ The Spark appliction example is based on my previous [spark application example]
 
 # DSE Spark Jobserver Overview
 
-## Start/Stop DSE Spark Jobserver on DSE Server Node
+## Start/Stop DSE Spark Jobserver on a DSE Server Node
 
 DSE Spark Jobserver is simply a packaged version of the OSS Spark Jobserver. There is no functional difference between them. Starting DSE Spark Jobserver is esay, just by executing the following command with the screen output as below:
 ```
@@ -52,7 +52,7 @@ The default installation directory of the Spark Jobserver depends on the type of
   Tarball installations: installation_location/resources/spark/spark-jobserver
 ```
 
-### Start DSE Spark Jobserver on a Remote Node
+### Start DSE Spark Jobserver on a Remote Client Node
 
 DSE Spark job server can also start on a remote client node that is not part of the DSE cluster, as long as it meets 2 conditions:
 1) The client node has DSE binary installed (no need to have DSE service running)
